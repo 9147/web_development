@@ -1,0 +1,15 @@
+command to install node-telegram-bot-api
+npm i node-telegram-bot-api
+
+question data:
+https://www.indiabix.com/general-knowledge/technology/
+
+
+github link:
+https://github.com/9147/web_development
+
+telegram API documentation:
+https://core.telegram.org/bots/api#message
+
+node-telegram-bot-api:
+https://github.com/yagop/node-telegram-bot-api/

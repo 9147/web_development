@@ -21,18 +21,18 @@
             font-family: 'Alkatra', cursive;
             font-family: 'Labrada', serif;
             background-color: aliceblue;
-            font-size: 2em;
+            font-size: 1.5em;
             max-width: 50vw;
             padding: 1em;
             position:relative;
             border-radius: 5px;
             border-style:solid;
             border-width: 1px;
-            top:25%;
+            top:20%;
         }
         .options-block{
             display:grid;
-            font-size: 1.5em;
+            font-size: 1em;
             text-align: center;
             grid-column-gap: 2em;
             grid-row-gap: 5vh;
@@ -46,7 +46,7 @@
             font-family: 'Labrada', serif;
             background-color: aliceblue;
             display: block;
-            padding: .5em;
+            padding: .3em;
             border-style: solid;
             border-width: 1px;
             border-radius: 1em;
@@ -97,9 +97,16 @@
     <script>
         
 
-        var questions=["who are u??","What is your name?","India's Prime minister?"];
-        var options=[["cow","human","dog","monkey"],["nothing","something","manoj","maggie"],["me","you","no-one","Modi"]];
-        var answers=[1,2,3];
+        var questions=["In which decade was the American Institute of Electrical Engineers (AIEE) founded?",
+        "What is part of a database that holds only one type of information?",
+        "'OS' computer abbreviation usually means ?",
+        "In which decade with the first transatlantic radio broadcast occur?",];
+        var options=[["1850s","1880s","1930s","1950s"],
+                    ["Report","Field","Record","File"],
+                    ["Order of Significance","Open Software","Operating System","Optical Sensor"],
+                    ["1850s","1860s","1870s","1900s"],
+                    ];
+        var answers=[1,1,2,3];
 
         sessionStorage.questions=answers.length;
         sessionStorage.button=0;
