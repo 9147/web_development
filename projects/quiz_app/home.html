@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@700&family=Labrada:ital@1&display=swap" rel="stylesheet">
+    <style>
+        .container{
+            background-color: aqua;
+            height:calc(100vh);
+            width:calc(100vw );
+            margin: -10px;
+            border-radius: 10px;
+        }
+        .question-block{
+            display:block;
+            font-family: 'Alkatra', cursive;
+            font-family: 'Labrada', serif;
+            background-color: aliceblue;
+            font-size: 2em;
+            max-width: 50vw;
+            padding: 1em;
+            position:relative;
+            border-radius: 5px;
+            border-style:solid;
+            border-width: 1px;
+            top:25%;
+        }
+        .options-block{
+            display:grid;
+            font-size: 1.5em;
+            text-align: center;
+            grid-column-gap: 2em;
+            grid-row-gap: 5vh;
+            grid-template-columns: 1fr 1fr;
+            max-width: 50vw;
+            position: relative;
+            top:35%;
+        }
+        .options-block>a>span{
+            font-family: 'Alkatra', cursive;
+            font-family: 'Labrada', serif;
+            background-color: aliceblue;
+            display: block;
+            padding: .5em;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 1em;
+            
+        }
+        .option:hover{
+            padding: .4em;
+        }
+        .button{
+            font-weight: 900;
+            border-radius: 1em;
+            font-family: 'Alkatra', cursive;
+            font-family: 'Labrada', serif;
+            font-family: 'Roboto', sans-serif;
+            position:relative;
+            top:50%;
+            padding:1em;
+            
+        }
+        .hover-button:hover{
+            padding: .8em;
+        }
+        @media screen and (max-width:500px){
+            .question-block{
+                max-width: 50vw;
+                background-color: antiquewhite;
+                padding: 1em;
+            }
+            :root{
+                font-size: 4px;
+            }
+        }
+    </style>
+</head>
+<body onresize="resizeScreen()">
+    <div class="container">
+        <span class="question-block" id="question">
+            Question
+        </span>
+        <span class="options-block" id="options">
+            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 1</span></a>
+            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 2</span></a>
+            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 3</span></a>
+            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 4</span></a>
+        </span>
+        <button class="button" onclick="submit_answer(this)" id="button" disabled>Done</button>
+    </div>
+    <script>
+        
+
+        var questions=["who are u??","What is your name?","India's Prime minister?"];
+        var options=[["cow","human","dog","monkey"],["nothing","something","manoj","maggie"],["me","you","no-one","Modi"]];
+        var answers=[1,2,3];
+
+        sessionStorage.questions=answers.length;
+        sessionStorage.button=0;
+        if(!sessionStorage.currentQuestion){
+        sessionStorage.currentQuestion=0;
+        sessionStorage.score=0;
+        }
+
+        console.log("question: "+sessionStorage.currentQuestion);
+        resizeScreen();
+
+        function resizeScreen(){
+        if(sessionStorage.currentQuestion>=answers.length){
+            window.location.replace("finish.html");
+        }else{
+            document.getElementById("question").innerHTML=questions[sessionStorage.currentQuestion];
+            var option=document.getElementsByClassName("option");
+            for(i=0;i<option.length;i++){
+                option[i].innerHTML=options[sessionStorage.currentQuestion][i];
+            }
+        }
+        var a=document.getElementById("question");
+        var b=document.getElementById("options");
+        var c=document.getElementById("button");
+        a.style.left=  window.innerWidth/2 - a.offsetWidth/2 + "px";
+        b.style.left= window.innerWidth/2 - b.offsetWidth/2 + "px";
+        c.style.left=  window.innerWidth/2 - c.offsetWidth/2 + "px";
+        }
+
+        function optionClick(arg){
+            if(sessionStorage.button==0){
+            document.getElementById("button").removeAttribute("disabled");
+            document.getElementById("button").classList.add("hover-button");
+            sessionStorage.button=1;
+            }
+            let options=document.getElementsByClassName("option");
+            for(i=0;i<options.length;i++){
+                options[i].style.borderColor="black";
+                options[i].style.borderWidth="1px"
+            }
+            arg.children[0].style.borderColor = "red";
+            arg.children[0].style.borderWidth = "3px";
+            i=0;
+            while( (arg = arg.previousSibling) != null ) i++;
+            i=(i-1)/2;
+            sessionStorage.optionClicked=i;
+        }
+
+        function submit_answer(arg){
+            arg.innerHTML="Next";
+            arg.setAttribute("onclick","next()");
+            console.log("option selected is "+sessionStorage.optionClicked);
+            if(sessionStorage.optionClicked==answers[sessionStorage.currentQuestion]){
+                sessionStorage.score= Number(sessionStorage.score)+1;
+            }
+            let child=document.getElementsByClassName("option");
+            child[answers[sessionStorage.currentQuestion]].style.borderColor="green";
+            child[answers[sessionStorage.currentQuestion]].style.borderWidth="3px";
+            while(child.length!=0){
+                child[0].parentElement.removeAttribute("onclick");
+                child[0].classList.remove("option");
+            }
+            sessionStorage.currentQuestion= Number(sessionStorage.currentQuestion) + 1;
+            console.log("score= "+sessionStorage.score);
+        }
+
+        function next(){
+            if(Number(sessionStorage.currentQuestion)<answers.length){
+             window.location.reload();
+            }else{
+            window.location.replace("finish.html");
+            }
+        }
+    </script>
+</body>
+</html>
