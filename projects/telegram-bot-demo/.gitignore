@@ -1,4 +1,11 @@
+#ignore downloaded modules
 node_modules/
+
+#ignore secrete key file
 api_id.js
+
+#ignore package-lock.json
 package-lock.json
+
+#ignore package.json
 package.json
