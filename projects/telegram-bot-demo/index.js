@@ -3,6 +3,9 @@ import TelegramBot from 'node-telegram-bot-api';
 // replace the value below with the Telegram token you receive from @BotFather
 import {token} from './api_id.js';
 
+//uncomment the line below if u want to add your api token here
+//const token = "<API TOKEN>"
+
 import request from 'request';
 
 const options = {
