@@ -1,3 +1,6 @@
+open on browser
+https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getMe
+
 command to install node-telegram-bot-api
 npm i node-telegram-bot-api
 
@@ -13,3 +16,6 @@ https://core.telegram.org/bots/api#message
 
 node-telegram-bot-api:
 https://github.com/yagop/node-telegram-bot-api/
+
+
+https://regex101.com/
