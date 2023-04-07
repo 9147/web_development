@@ -4,99 +4,70 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@700&family=Labrada:ital@1&display=swap" rel="stylesheet">
+    <title>demo</title>
     <style>
         .container{
             background-color: aqua;
-            height:calc(100vh);
-            width:calc(100vw );
-            margin: -10px;
-            border-radius: 10px;
+            height:100vh;
+            width:100vw;
+            margin:-10px;
         }
-        .question-block{
-            display:block;
-            font-family: 'Alkatra', cursive;
-            font-family: 'Labrada', serif;
-            background-color: aliceblue;
-            font-size: 1.5em;
-            max-width: 50vw;
-            padding: 1em;
-            position:relative;
-            border-radius: 5px;
-            border-style:solid;
-            border-width: 1px;
-            top:20%;
-        }
-        .options-block{
-            display:grid;
-            font-size: 1em;
-            text-align: center;
-            grid-column-gap: 2em;
-            grid-row-gap: 5vh;
-            grid-template-columns: 1fr 1fr;
-            max-width: 50vw;
-            position: relative;
-            top:35%;
-        }
-        .options-block>a>span{
-            font-family: 'Alkatra', cursive;
-            font-family: 'Labrada', serif;
-            background-color: aliceblue;
-            display: block;
-            padding: .3em;
-            border-style: solid;
-            border-width: 1px;
+        .questions{
+            max-width: 400px;
+            min-height: 4em;
             border-radius: 1em;
-            
-        }
-        .option:hover{
-            padding: .4em;
-        }
-        .button{
-            font-weight: 900;
-            border-radius: 1em;
-            font-family: 'Alkatra', cursive;
-            font-family: 'Labrada', serif;
-            font-family: 'Roboto', sans-serif;
-            position:relative;
-            top:50%;
             padding:1em;
-            
+            position:relative;
+            top:25%;
+            background-color: aliceblue;
         }
-        .hover-button:hover{
-            padding: .8em;
+        .options{
+            display:grid;
+            column-gap:1em;
+            width: 400px;
+            grid-template-columns: 1fr 1fr;
+            row-gap: 1em;
+            position: absolute;
+            top:50%;
+            text-align: center;
         }
-        @media screen and (max-width:500px){
-            .question-block{
-                max-width: 50vw;
-                background-color: antiquewhite;
-                padding: 1em;
-            }
-            :root{
-                font-size: 4px;
-            }
+        .options>a,button>a{
+            text-decoration: none;
+            color:black;
+        }
+        .options>a>div{
+            background-color:bisque;
+            padding:.7em;
+            border-radius: .5em;
+            border-width: "1px";
+            border-color: bisque;
+            border-style: solid;
+        }
+        .options>a>div:hover{
+            background-color: rgb(238, 180, 110);
+        }
+        button{
+            position: absolute;
+            top:75%;
+            border-radius: .5em;
+            padding:1em;
         }
     </style>
 </head>
-<body onresize="resizeScreen()">
+<body onresize="resize()">
     <div class="container">
-        <span class="question-block" id="question">
-            Question
-        </span>
-        <span class="options-block" id="options">
-            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 1</span></a>
-            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 2</span></a>
-            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 3</span></a>
-            <a href="#" onclick="optionClick(this)" style="text-decoration: none; color:black"><span class="option" >option 4</span></a>
-        </span>
-        <button class="button" onclick="submit_answer(this)" id="button" disabled>Done</button>
+        <div class="questions" id="questions">
+            Q)question
+        </div>
+        <div class="options" id="options">
+            <a href="#" onclick="select_option(this)"><div class="options-item">option 1</div></a>
+            <a href="#" onclick="select_option(this)"><div class="options-item">option 2</div></a>
+            <a href="#" onclick="select_option(this)"><div class="options-item">option 3</div></a>
+            <a href="#" onclick="select_option(this)"><div class="options-item">option 4</div></a>
+        </div>
+        <button id="button" onclick="submit(this)" disabled><a href="#">Submit</a></button>
     </div>
     <script>
-        
-
         var questions=["In which decade was the American Institute of Electrical Engineers (AIEE) founded?",
         "What is part of a database that holds only one type of information?",
         "'OS' computer abbreviation usually means ?",
@@ -107,67 +78,52 @@
                     ["1850s","1860s","1870s","1900s"],
                     ];
         var answers=[1,1,2,3];
+        if(!sessionStorage.currentQuestion){sessionStorage.currentQuestion=0;sessionStorage.score=0;sessionStorage.questions=answers.length}
+        const question_block=document.getElementById("questions");
+        const options_block=document.getElementById("options");
+        const button_block=document.getElementById("button");
+        resize();
 
-        sessionStorage.questions=answers.length;
-        sessionStorage.button=0;
-        if(!sessionStorage.currentQuestion){
-        sessionStorage.currentQuestion=0;
-        sessionStorage.score=0;
-        }
-
-        console.log("question: "+sessionStorage.currentQuestion);
-        resizeScreen();
-
-        function resizeScreen(){
-        if(sessionStorage.currentQuestion>=answers.length){
+        function resize(){
+            if(sessionStorage.currentQuestion>=answers.length){
             window.location.replace("finish.html");
         }else{
-            document.getElementById("question").innerHTML=questions[sessionStorage.currentQuestion];
-            var option=document.getElementsByClassName("option");
+            document.getElementById("questions").innerHTML=questions[sessionStorage.currentQuestion];
+            var option=document.getElementsByClassName("options-item");
             for(i=0;i<option.length;i++){
                 option[i].innerHTML=options[sessionStorage.currentQuestion][i];
             }
         }
-        var a=document.getElementById("question");
-        var b=document.getElementById("options");
-        var c=document.getElementById("button");
-        a.style.left=  window.innerWidth/2 - a.offsetWidth/2 + "px";
-        b.style.left= window.innerWidth/2 - b.offsetWidth/2 + "px";
-        c.style.left=  window.innerWidth/2 - c.offsetWidth/2 + "px";
+        button_block.style.left= window.innerWidth/2 - button_block.offsetWidth/2 +"px";
+        options_block.style.left= window.innerWidth/2 - options_block.offsetWidth/2 +"px";
+        question_block.style.left= window.innerWidth/2 - question_block.offsetWidth/2 +"px";
         }
-
-        function optionClick(arg){
-            if(sessionStorage.button==0){
+        
+        function select_option(arg){
+            let options=document.getElementsByClassName("options-item");
             document.getElementById("button").removeAttribute("disabled");
-            document.getElementById("button").classList.add("hover-button");
-            sessionStorage.button=1;
-            }
-            let options=document.getElementsByClassName("option");
-            for(i=0;i<options.length;i++){
-                options[i].style.borderColor="black";
-                options[i].style.borderWidth="1px"
+            for(var i=0;i<options.length;i++){
+                if(options[i]==arg.children[0]){
+                    sessionStorage.select_option=i;
+                }
+                options[i].style.borderColor="bisque";
             }
             arg.children[0].style.borderColor = "red";
-            arg.children[0].style.borderWidth = "3px";
-            i=0;
-            while( (arg = arg.previousSibling) != null ) i++;
-            i=(i-1)/2;
-            sessionStorage.optionClicked=i;
+            
         }
 
-        function submit_answer(arg){
-            arg.innerHTML="Next";
+        function submit(arg){
+            arg.innerHTML="<a href=\"#\">Next</a>";
             arg.setAttribute("onclick","next()");
-            console.log("option selected is "+sessionStorage.optionClicked);
-            if(sessionStorage.optionClicked==answers[sessionStorage.currentQuestion]){
+            console.log("option selected is "+sessionStorage.select_option);
+            if(sessionStorage.select_option==answers[sessionStorage.currentQuestion]){
                 sessionStorage.score= Number(sessionStorage.score)+1;
             }
-            let child=document.getElementsByClassName("option");
+            let child=document.getElementsByClassName("options-item");
             child[answers[sessionStorage.currentQuestion]].style.borderColor="green";
-            child[answers[sessionStorage.currentQuestion]].style.borderWidth="3px";
             while(child.length!=0){
                 child[0].parentElement.removeAttribute("onclick");
-                child[0].classList.remove("option");
+                child[0].classList.remove("options-item");
             }
             sessionStorage.currentQuestion= Number(sessionStorage.currentQuestion) + 1;
             console.log("score= "+sessionStorage.score);
@@ -180,6 +136,7 @@
             window.location.replace("finish.html");
             }
         }
+
     </script>
 </body>
 </html>
